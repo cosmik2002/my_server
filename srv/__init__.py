@@ -43,6 +43,9 @@ def create_app(config_class=Config):
 
     from srv.main import bp as main_bp
     app.register_blueprint(main_bp)
+
+    from srv.dacha import bp as dacha_bp
+    app.register_blueprint(dacha_bp,url_prefix='/dacha')
     
     from srv.api import bp as api_bp
     app.register_blueprint(api_bp, url_prefix='/api')

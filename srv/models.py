@@ -27,6 +27,18 @@ class PaginatedAPIMixin(object):
       }
       return data
 
+class Log(db.Model):
+    date_time = db.Column(db.DateTime,primary_key=True,default=datetime.utcnow)       
+    log_type = db.Column(db.String(50),index=True)
+    message = db.Column(db.String(512))
+
+class Climate(db.Model):
+    date_time = db.Column(db.DateTime,primary_key=True,default=datetime.utcnow)       
+    type = db.Column(db.String(50),index=True)
+    temp = db.Column(db.Integer)
+    humidity = db.Column(db.Integer)
+
+
 class User(PaginatedAPIMixin, UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
