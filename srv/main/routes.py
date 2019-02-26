@@ -30,7 +30,7 @@ def index():
 def before_request():
   logging.getLogger('access_log').info('\t'.join([
             datetime.today().strftime("%Y-%m-%d %H:%M:%S"),
-            request.remote_addr,
+            request.remote_addr if 'X-Forwarded-For' not in request.headers else request.headers[request.headers.index('X-Forwarded-For')+1],
             request.method,
             request.url,
             ', '.join(x+':'+request.values[x] for x in request.values),
