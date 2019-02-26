@@ -74,7 +74,7 @@ def create_app(config_class=Config):
                                        backupCount=10)
     access_log = logging.getLogger('access_log')
     access_log.setLevel(logging.INFO)
-    access_handler = RotatingFileHandler('logs/access.log', maxBytes=10240,
+    access_handler = RotatingFileHandler('logs/access.log', maxBytes=10485760,
                                        backupCount=10) 
     file_handler.setFormatter(logging.Formatter(
         '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'))
