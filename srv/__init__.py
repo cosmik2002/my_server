@@ -10,6 +10,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask.logging import default_handler
+import dash
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -25,15 +26,27 @@ class RequestFormatter(logging.Formatter):
         record.remote_addr = request.remote_addr
         return super(RequestFormatter, self).format(record)
 
+def register_dashapps(app):
+   #with app.app_context():
+     from srv.dashapp.layout import layout
+     from srv.dashapp.callbacks import register_callbacks
+     dash_app = dash.Dash(__name__,server=app,url_base_pathname='/dashboard/')
+     dash_app.layout = layout
+     dash_app.title = 'Analytics'
+     register_callbacks(dash_app)
+
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
+
 
     db.init_app(app)
     migrate.init_app(app, db)
     login.init_app(app)
     bootstrap.init_app(app)
     moment.init_app(app)
+
+    register_dashapps(app)
 
     from srv.errors import bp as errors_bp
     app.register_blueprint(errors_bp)
@@ -90,6 +103,12 @@ def create_app(config_class=Config):
 
     app.logger.setLevel(logging.INFO)
     app.logger.info('Srv startup')
+    
+    from srv.models import User
+    @app.shell_context_processor
+    def make_shell_context():
+       return dict(app=app, db=db, User=User)
+    
     return  app 
 
 class SSLSMTPHandler(SMTPHandler):
