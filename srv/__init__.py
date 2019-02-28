@@ -5,7 +5,7 @@ from config import Config
 import os
 import logging
 import smtplib
-from logging.handlers import SMTPHandler,RotatingFileHandler
+from logging.handlers import SMTPHandler, RotatingFileHandler
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager,login_required
@@ -56,7 +56,6 @@ def create_app(config_class=Config):
 
     register_dashapps(app)
 
-
     from srv.errors import bp as errors_bp
     app.register_blueprint(errors_bp)
 
@@ -96,14 +95,12 @@ def create_app(config_class=Config):
                                        backupCount=10)
     access_log = logging.getLogger('access_log')
     access_log.setLevel(logging.INFO)
-    print("Initializing LOGGING in settings.py - if you see this more than once use 'runserver --noreload'")
-    access_handler = RotatingFileHandler('logs/access.log', maxBytes=10240,
+    access_handler = RotatingFileHandler('logs/access.log', maxBytes=10485760,
                                        backupCount=10) 
     file_handler.setFormatter(logging.Formatter(
         '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'))
     file_handler.setLevel(logging.INFO)
     app.logger.addHandler(file_handler)
-    #app.logger.addHandler(access_handler)
     #formatter = RequestFormatter(
     #'[%(asctime)s] %(remote_addr)s requested %(url)s\n'
     #'%(levelname)s in %(module)s: %(message)s'
