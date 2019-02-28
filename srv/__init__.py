@@ -8,7 +8,7 @@ import smtplib
 from logging.handlers import SMTPHandler,RotatingFileHandler
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from flask_login import LoginManager
+from flask_login import LoginManager,login_required
 from flask.logging import default_handler
 import dash
 
@@ -34,6 +34,14 @@ def register_dashapps(app):
      dash_app.layout = layout
      dash_app.title = 'Analytics'
      register_callbacks(dash_app)
+     protect_dashviews(dash_app)
+
+# Method to protect dash views/routes
+def protect_dashviews(dashapp):
+    for view_func in dashapp.server.view_functions:
+        if view_func.startswith(dashapp.url_base_pathname):
+            dashapp.server.view_functions[view_func] = login_required(dashapp.server.view_functions[view_func])
+
 
 def create_app(config_class=Config):
     app = Flask(__name__)
@@ -47,6 +55,7 @@ def create_app(config_class=Config):
     moment.init_app(app)
 
     register_dashapps(app)
+
 
     from srv.errors import bp as errors_bp
     app.register_blueprint(errors_bp)
@@ -66,7 +75,7 @@ def create_app(config_class=Config):
     if not app.debug and not app.testing:
       if app.config['MAIL_SERVER']:
           auth = None
-          print("mail")
+          #print("mail")
           if app.config['MAIL_USERNAME'] or app.config['MAIL_PASSWORD']:
               auth = (app.config['MAIL_USERNAME'], app.config['MAIL_PASSWORD'])
           secure = None
@@ -87,12 +96,14 @@ def create_app(config_class=Config):
                                        backupCount=10)
     access_log = logging.getLogger('access_log')
     access_log.setLevel(logging.INFO)
+    print("Initializing LOGGING in settings.py - if you see this more than once use 'runserver --noreload'")
     access_handler = RotatingFileHandler('logs/access.log', maxBytes=10240,
                                        backupCount=10) 
     file_handler.setFormatter(logging.Formatter(
         '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'))
     file_handler.setLevel(logging.INFO)
     app.logger.addHandler(file_handler)
+    #app.logger.addHandler(access_handler)
     #formatter = RequestFormatter(
     #'[%(asctime)s] %(remote_addr)s requested %(url)s\n'
     #'%(levelname)s in %(module)s: %(message)s'
