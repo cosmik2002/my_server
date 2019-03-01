@@ -1,7 +1,26 @@
 import dash_core_components as dcc
 import dash_html_components as html
-from srv.models import Climate
+import dash_table as dt
+import pandas as pd
+from srv.models import Operation, User
 import plotly.graph_objs as go
+
+
+df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/solar.csv')
+
+
+
+def generate_table():
+    d = []
+    for row in User.query.all():
+        d.append({a: getattr(row, a) for a in User.__table__.columns.keys()})
+    return dt.DataTable(
+    id='my_table',
+    columns=[{"name": i, "id": i} for i in User.__table__.columns.keys()],
+    data=d,
+    sorting=True,
+    filtering=True
+    )
 
 layout = html.Div([
     html.H1('Температура на дачке'),
@@ -16,5 +35,9 @@ layout = html.Div([
     ),
     dcc.Graph(
        id='my-graph'
-    )
-], style={'width': '500'})
+    ),
+    dt.DataTable(
+        id='table',
+        columns=[{"name": i, "id": i} for i in df.columns],
+        data=df.to_dict("rows"),
+    ), generate_table()], style={'width': '500'})

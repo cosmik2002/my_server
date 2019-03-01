@@ -104,3 +104,56 @@ class User(PaginatedAPIMixin, UserMixin, db.Model):
 def load_user(id):
     return User.query.get(int(id))
 
+
+class Operation(db.Model):
+    __bind_key__ = 'supermag'
+    __tablename__ = 'operations_v'
+    id = db.Column(db.Integer, primary_key=True)
+    number = db.Column(db.String(50), index=True)
+    wdate = db.Column(db.DateTime, index=True)
+    type_id = db.Column(db.Integer, db.ForeignKey('object_types_v.id'))
+    client1 = db.Column(db.Integer, db.ForeignKey('clients_v.id'))
+    client2 = db.Column(db.Integer, db.ForeignKey('clients_v.id'))
+    client1obj = db.relationship('Clients', foreign_keys=[client1])
+    client2obj = db.relationship('Clients', foreign_keys=[client2])
+    spec = db.relationship('OperationsSpec', backref='head', lazy='dynamic')
+    summ = db.Column(db.Float)
+    summ1 = db.Column(db.Float)
+    quantity = db.Column(db.Float)
+    quantity1 = db.Column(db.Float)
+
+
+class OperationsSpec(db.Model):
+    __bind_key__ = 'supermag'
+    __tablename__ = 'operations_spec_v'
+    id = db.Column(db.Integer, primary_key=True)
+    operation_id = db.Column(db.Integer, db.ForeignKey('operations_v.id'))
+    card_id = db.Column(db.Integer, db.ForeignKey('card_v.id'))
+    quantity = db.Column(db.Float)
+    quantity1 = db.Column(db.Float)
+    summ = db.Column(db.Float)
+    summ1 = db.Column(db.Float)
+
+class ObjectTypes (db.Model):
+   __bind_key__='supermag'
+   __tablename__='object_types_v'
+   id = db.Column(db.Integer, primary_key = True)
+   name = db.Column(db.String(30))
+   discription = db.Column(db.String(100))
+   operations = db.relationship('Operation',backref='type_name',lazy=True)
+
+class Clients (db.Model):
+   __bind_key__='supermag'
+   __tablename__='clients_v'
+   id = db.Column(db.Integer, primary_key = True)
+   name = db.Column(db.String(100))
+
+
+
+class Card(db.Model):
+    __bind_key__ = 'supermag'
+    __tablename__ = 'card_v'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(500))
+    articul = db.Column(db.String(50))
+    spec = db.relationship('OperationsSpec', backref='card', lazy='dynamic')

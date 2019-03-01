@@ -27,7 +27,7 @@ class RequestFormatter(logging.Formatter):
         return super(RequestFormatter, self).format(record)
 
 def register_dashapps(app):
-   #with app.app_context():
+   with app.app_context():
      from srv.dashapp.layout import layout
      from srv.dashapp.callbacks import register_callbacks
      dash_app = dash.Dash(__name__,server=app,url_base_pathname='/dashboard/')
