@@ -11,13 +11,13 @@ df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/solar
 
 
 def generate_table():
-    d = []
-    for row in User.query.all():
-        d.append({a: getattr(row, a) for a in User.__table__.columns.keys()})
+    #d = []
+    # for row in User.query.all():
+    #     d.append({a: getattr(row, a) for a in User.__table__.columns.keys()})
     return dt.DataTable(
     id='my_table',
-    columns=[{"name": i, "id": i} for i in User.__table__.columns.keys()],
-    data=d,
+    columns=[{"name": i.key, "id": i.key} for i in User.__table__.columns if 'visible' not in i.info],
+    data=[item.to_dict() for item in User.query.all()],
     sorting=True,
     filtering=True
     )

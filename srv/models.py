@@ -27,6 +27,14 @@ class PaginatedAPIMixin(object):
       }
       return data
 
+class ToDictInterfaceMixin(object):
+    def to_dict(self):
+        d={}
+        for col in self.__table__.columns:
+          if 'visible' not in col.info or col.info['visible'] is not False:
+              d[col.key]=getattr(self, col.key)
+        return d
+
 class Log(db.Model):
     date_time = db.Column(db.DateTime,primary_key=True,default=datetime.utcnow)       
     log_type = db.Column(db.String(50),index=True)
@@ -39,14 +47,14 @@ class Climate(db.Model):
     humidity = db.Column(db.Integer)
 
 
-class User(PaginatedAPIMixin, UserMixin, db.Model):
+class User(ToDictInterfaceMixin, PaginatedAPIMixin, UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
     email = db.Column(db.String(120), index=True, unique=True)
     about_me = db.Column(db.String(140))
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)       
-    password_hash = db.Column(db.String(128))
-    token = db.Column(db.String(32),index = True, unique = True)
+    password_hash = db.Column(db.String(128),info={'visible':False})
+    token = db.Column(db.String(32),index = True, unique = True,info={'visible':False})
     token_expiration = db.Column(db.DateTime)
 
     def get_token(self,expires_in=3600):
@@ -78,19 +86,19 @@ class User(PaginatedAPIMixin, UserMixin, db.Model):
     def __repr__(self):
         return '<User {}>'.format(self.username) 
 
-    def to_dict(self, include_email=False):
-        data = {
-            'id': self.id,
-            'username': self.username,
-            'last_seen': self.last_seen.isoformat() + 'Z',
-            'about_me': self.about_me,
-            '_links': {
-                'self': url_for('api.get_user', id=self.id),
-            }
-        }
-        if include_email:
-            data['email'] = self.email
-        return data
+    # def to_dict(self, include_email=False):
+    #     data = {
+    #         'id': self.id,
+    #         'username': self.username,
+    #         'last_seen': self.last_seen.isoformat() + 'Z',
+    #         'about_me': self.about_me,
+    #         '_links': {
+    #             'self': url_for('api.get_user', id=self.id),
+    #         }
+    #     }
+    #     if include_email:
+    #         data['email'] = self.email
+    #     return data
 
     def from_dict(self, data, new_user=False):
         for field in ['username','email','about_me']:
@@ -105,10 +113,10 @@ def load_user(id):
     return User.query.get(int(id))
 
 
-class Operation(db.Model):
+class Operation(ToDictInterfaceMixin, db.Model):
     __bind_key__ = 'supermag'
     __tablename__ = 'operations_v'
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True,info={'visible':True})
     number = db.Column(db.String(50), index=True)
     wdate = db.Column(db.DateTime, index=True)
     type_id = db.Column(db.Integer, db.ForeignKey('object_types_v.id'))
