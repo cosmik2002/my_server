@@ -19,6 +19,8 @@
     {% else %}
     <a href="{{url_for('auth.logout')}}">Logout</a>
     {% endif %}
+    <a href="{{ url_for('/dashboard/') }}">Dashboard</a>
+    <a href="{{ url_for('/dashboard1/') }}">Dashboard1</a>
     </nav>
 {% endblock %}
 {% block content %}

@@ -28,7 +28,7 @@ class RequestFormatter(logging.Formatter):
 
 def register_dashapps(app):
    with app.app_context():
-     from srv.dashapp.layout import layout
+     from srv.dashapp.layout import layout, layout1
      from srv.dashapp.callbacks import register_callbacks
      dash_app = dash.Dash(__name__,server=app,url_base_pathname='/dashboard/')
      dash_app.layout = layout
@@ -36,10 +36,17 @@ def register_dashapps(app):
      register_callbacks(dash_app)
      protect_dashviews(dash_app)
 
+     dash_app1 = dash.Dash(__name__,server=app,url_base_pathname='/dashboard1/')
+     dash_app1.layout = layout1
+     dash_app1.title = 'Analytics1'
+     #register_callbacks1(dash_app1)
+     protect_dashviews(dash_app1)
+
 # Method to protect dash views/routes
 def protect_dashviews(dashapp):
     for view_func in dashapp.server.view_functions:
-        if view_func.startswith(dashapp.url_base_pathname):
+        if dashapp.url_base_pathname:
+         if view_func.startswith(dashapp.url_base_pathname):
             dashapp.server.view_functions[view_func] = login_required(dashapp.server.view_functions[view_func])
 
 
