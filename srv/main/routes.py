@@ -1,9 +1,17 @@
-from flask import render_template,current_app,request
+from flask import render_template,current_app,request,Markup
 import logging
 from srv.main import bp
-from srv import db
+from srv import db, dash_app1
 from flask_login import login_required,current_user
 from datetime import datetime
+import re
+
+@bp.route('/dashtest')
+def dash_test():
+    cnt = dash_app1.index()
+    #content = Markup(re.search(r'<body>(.+)</body>', cnt,re.DOTALL).group(1))
+    content = re.search(r'<body>(.+)</body>', cnt,re.DOTALL).group(1)
+    return render_template('dash.html',content=content)
 
 @bp.route('/')
 @bp.route('/index')

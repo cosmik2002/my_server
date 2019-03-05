@@ -1,4 +1,4 @@
-from flask import Flask,request
+from flask import Flask, request
 from flask_bootstrap import Bootstrap
 from flask_moment import Moment
 from config import Config
@@ -19,6 +19,7 @@ login.login_view = 'auth.login'
 #login.refresh_view = 'auth.login'
 bootstrap = Bootstrap()
 moment = Moment()
+dash_app1 = None
 
 class RequestFormatter(logging.Formatter):
     def format(self, record):
@@ -26,20 +27,24 @@ class RequestFormatter(logging.Formatter):
         record.remote_addr = request.remote_addr
         return super(RequestFormatter, self).format(record)
 
+
 def register_dashapps(app):
-   with app.app_context():
      from srv.dashapp.layout import layout, layout1
-     from srv.dashapp.callbacks import register_callbacks
-     dash_app = dash.Dash(__name__,server=app,url_base_pathname='/dashboard/')
+     from srv.dashapp.callbacks import register_callbacks, register_callbacks1
+
+     external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+
+     dash_app = dash.Dash(__name__,server=app,url_base_pathname='/dashboard/',external_stylesheets=external_stylesheets)
      dash_app.layout = layout
      dash_app.title = 'Analytics'
      register_callbacks(dash_app)
      protect_dashviews(dash_app)
 
-     dash_app1 = dash.Dash(__name__,server=app,url_base_pathname='/dashboard1/')
+     global dash_app1
+     dash_app1 = dash.Dash(__name__,server=app,url_base_pathname='/dashboard1/',external_stylesheets=external_stylesheets)
      dash_app1.layout = layout1
      dash_app1.title = 'Analytics1'
-     #register_callbacks1(dash_app1)
+     register_callbacks1(dash_app1)
      protect_dashviews(dash_app1)
 
 # Method to protect dash views/routes
