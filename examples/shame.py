@@ -1,3 +1,5 @@
+import sys
+sys.path.insert(0, r'E:\Nicholas\python\my_server')
 from srv import create_app, db
 from srv.models import User
 
