@@ -7,6 +7,14 @@ from srv import login
 from flask import flash,url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 
+class ToDictInterfaceMixin(object):
+    def to_dict(self):
+        d={}
+        for col in self.__table__.columns:
+          if 'visible' not in col.info or col.info['visible'] is not False:
+              d[col.key]=getattr(self, col.key)
+        return d
+
 class PaginatedAPIMixin(object):
    @staticmethod
    def to_collection_dict(query, page, per_page, endpoint, **kwargs):
@@ -27,10 +35,12 @@ class PaginatedAPIMixin(object):
       }
       return data
 
-class Log(db.Model):
+
+class Log(ToDictInterfaceMixin, db.Model):
     date_time = db.Column(db.DateTime,primary_key=True,default=datetime.utcnow)       
     log_type = db.Column(db.String(50),index=True)
     message = db.Column(db.String(512))
+
 
 class Climate(db.Model):
     date_time = db.Column(db.DateTime,primary_key=True,default=datetime.utcnow)       

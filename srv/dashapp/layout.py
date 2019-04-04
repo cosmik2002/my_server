@@ -1,5 +1,6 @@
 import dash_core_components as dcc
 import dash_html_components as html
+import dash_table as dt
 from srv.models import Climate
 import plotly.graph_objs as go
 
@@ -16,5 +17,7 @@ layout = html.Div([
     ),
     dcc.Graph(
        id='my-graph'
-    )
-], style={'width': '500'})
+    ),
+    dt.DataTable(id="data_table"),
+    html.Div(id='content')
+])#, style={'width': '500'})
