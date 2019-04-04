@@ -34,6 +34,11 @@ def index():
     ]
     return render_template('index.html', title='Home', user=user, posts=posts)
 
+@bp.route('/geo')
+def geo():
+    return render_template('geo.html')
+
+
 @bp.before_app_request
 def before_request():
   logging.getLogger('access_log').info('\t'.join([

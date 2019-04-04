@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!--<script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&amp;apikey=f3e7c633-f416-4066-8473-9c7cf685b43c" type="text/javascript"></script>-->
+<script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
+<script src="https://yandex.st/jquery/2.2.3/jquery.min.js" type="text/javascript"></script>
+</head>
+<body>
+
+<p>Click the button to get your coordinates.</p>
+
+<button onclick="getLocation()">Try It</button>
+<input type="button" id="toggle" value="Try" />
+<input type="text" value="123">
+<p id="demo"></p>
+<div id="map" style="width: 600px; height: 400px"></div>
+
+<script>
+    var x = document.getElementById("demo");
+    var pos;
+    ymaps.ready(init);
+    function init() {
+        var myMap;
+    $('#toggle').bind({
+        click: function () {
+            if (!myMap) {
+                myMap = new ymaps.Map('map', {
+                    center: [pos.coords.latitude,pos.coords.longitude],//[55.010251, 82.958437], // Новосибирск
+                    zoom: 12
+                });
+                $("#toggle").attr('value', 'Скрыть карту');
+            }
+            else {
+                myMap.destroy();// Деструктор карты
+                myMap = null;
+                $("#toggle").attr('value', 'Показать карту снова');
+            }
+        }
+    });
+    }
+function getLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(showPosition, showError);
+
+
+  } else { 
+    x.innerHTML = "Geolocation is not supported by this browser.";
+  }
+}
+
+function showPosition(position) {
+  pos = position;
+  x.innerHTML = "Latitude: " + position.coords.latitude + 
+  "<br>Longitude: " + position.coords.longitude;
+}
+
+function showError(error) {
+  switch(error.code) {
+    case error.PERMISSION_DENIED:
+      x.innerHTML = "User denied the request for Geolocation."
+      break;
+    case error.POSITION_UNAVAILABLE:
+      x.innerHTML = "Location information is unavailable."
+      break;
+    case error.TIMEOUT:
+      x.innerHTML = "The request to get user location timed out."
+      break;
+    case error.UNKNOWN_ERROR:
+      x.innerHTML = "An unknown error occurred."
+      break;
+  }
+}
+</script>
+
+</body>
+</html>
