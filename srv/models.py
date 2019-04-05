@@ -15,11 +15,12 @@ class ToDictInterfaceMixin(object):
               d[col.key]=getattr(self, col.key)
         return d
 
+
 class PaginatedAPIMixin(object):
-   @staticmethod
-   def to_collection_dict(query, page, per_page, endpoint, **kwargs):
-      resources = query.paginate(page,per_page, False)
-      data = {
+    @staticmethod
+    def to_collection_dict(query, page, per_page, endpoint, **kwargs):
+        resources = query.paginate(page,per_page, False)
+        data = {
          'items':[item.to_dict() for item in resources.items],
          '_meta': {
             'page': page,
@@ -32,8 +33,22 @@ class PaginatedAPIMixin(object):
              'next': url_for(endpoint,page=page + 1,per_page = per_page,**kwargs) if resources.has_next else None,
              'prev': url_for(endpoint,page=page - 1,per_page = per_page,**kwargs) if resources.has_prev else None,
           }
-      }
-      return data
+        }
+        return data
+
+
+
+
+class test(db.Model):
+    pass
+    #INDEXZAZNAMU = db.Column(db.Integer,primary_key=True)
+    #cislofa = db.Column(db.Integer,primary_key=True)
+
+class KnihaFaktur(db.Model):
+    __bind_key__ = 'fakturace'
+    __tablename__ = 'KNIHAFAKTUR'
+    INDEXZAZNAMU = db.Column(db.Integer,primary_key=True)
+    #cislofa = db.Column(db.Integer,primary_key=True)
 
 
 class Log(ToDictInterfaceMixin, db.Model):

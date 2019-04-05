@@ -5,6 +5,9 @@ class Config(object):
 #    SERVER_NAME = os.environ.get('SERVER_NAME') 
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
         'sqlite:///'+os.path.join(basedir,'srv.sqb')
+    SQLALCHEMY_BINDS = {
+        'fakturace':    'firebird://SYSDBA:masterkey@localhost:3051/c:\\datawalsoft\\datawalsoft3.fdb?charset=utf8'
+    }
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     MAIL_SERVER = os.environ.get('MAIL_SERVER')
     MAIL_PORT = int(os.environ.get('MAIL_PORT') or 25)

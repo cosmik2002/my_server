@@ -18,6 +18,6 @@ layout = html.Div([
     dcc.Graph(
        id='my-graph'
     ),
-    dt.DataTable(id="data_table"),
+    dt.DataTable(id="data_table",virtualization=True,pagination_mode=False),
     html.Div(id='content')
 ])#, style={'width': '500'})

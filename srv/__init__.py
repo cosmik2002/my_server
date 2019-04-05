@@ -56,6 +56,8 @@ def create_app(config_class=Config):
 
     register_dashapps(app)
 
+    db.reflect(app=app)
+
     from srv.errors import bp as errors_bp
     app.register_blueprint(errors_bp)
 
@@ -112,10 +114,10 @@ def create_app(config_class=Config):
     app.logger.setLevel(logging.INFO)
     app.logger.info('Srv startup')
     
-    from srv.models import User
+    from srv.models import User, KnihaFaktur, test
     @app.shell_context_processor
     def make_shell_context():
-       return dict(app=app, db=db, User=User)
+       return dict(app=app, db=db, User=User, KnihaFaktur=KnihaFaktur, test=test)
     
     return  app 
 

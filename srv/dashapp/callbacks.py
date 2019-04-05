@@ -2,7 +2,7 @@ from dash.dependencies import Input
 from dash.dependencies import Output
 from srv.models import Climate
 from srv.models import Log
-from sqlalchemy import or_, text
+from sqlalchemy import or_, text,desc
 
 def register_callbacks(app):
    @app.callback(
@@ -40,6 +40,6 @@ def register_callbacks(app):
        columns = [{"name": i.key, "id": i.key} for i in Log.__table__.columns if
                    'visible' not in i.info or i.info['visible'] is not False]
        data = [item.to_dict() for item in
-                Log.query.limit(5)]
+                Log.query.order_by(desc(Log.date_time)).all()]
        #filter(text("wdate between '" + start_date + "' and '" + end_date + "' and type_id=8"))],
        return figure,columns,data
