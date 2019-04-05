@@ -10,7 +10,7 @@ app.config['suppress_callback_exceptions'] = True
 app.layout = html.Div([
     html.Button(id='button', n_clicks=0, children='Show table'),
     html.Div(id='content'),
-    html.Div(dt.DataTable(data=[{}]), style={'display': 'none'})
+    #html.Div(dt.DataTable(data=[{}]), style={'display': 'none'})
 ])
 
 

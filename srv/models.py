@@ -8,7 +8,9 @@ from flask import flash,url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 
 class ToDictInterfaceMixin(object):
+    """serialize table record to dict"""
     def to_dict(self):
+        """serialize table record to dict"""
         d={}
         for col in self.__table__.columns:
           if 'visible' not in col.info or col.info['visible'] is not False:
@@ -39,8 +41,8 @@ class PaginatedAPIMixin(object):
 
 
 
-class test(db.Model):
-    pass
+#class test(db.Model):
+#    pass
     #INDEXZAZNAMU = db.Column(db.Integer,primary_key=True)
     #cislofa = db.Column(db.Integer,primary_key=True)
 
@@ -52,7 +54,7 @@ class KnihaFaktur(db.Model):
 
 
 class Log(ToDictInterfaceMixin, db.Model):
-    date_time = db.Column(db.DateTime,primary_key=True,default=datetime.utcnow)       
+    date_time = db.Column(db.DateTime,primary_key=True,default=datetime.utcnow)
     log_type = db.Column(db.String(50),index=True)
     message = db.Column(db.String(512))
 

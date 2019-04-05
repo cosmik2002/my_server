@@ -3,6 +3,7 @@ from dash.dependencies import Output
 from srv.models import Climate
 from srv.models import Log
 from sqlalchemy import or_, text,desc
+from dateutil.tz import tzutc
 
 def register_callbacks(app):
    @app.callback(
@@ -31,8 +32,8 @@ def register_callbacks(app):
        if value=='all':
          figure = {
           'data':[
-             {'x':[i.date_time for i in Climate.query.all()],'y':[i.temp for i in Climate.query.all()],'name':'Температура'},
-             {'x':[i.date_time for i in Climate.query.all()],'y':[i.humidity for i in Climate.query.all()],'name':'Влажность'}
+             {'x':[i.date_time.replace(tzinfo=tzutc) for i in Climate.query.all()],'y':[i.temp for i in Climate.query.all()],'name':'Температура'},
+             {'x':[i.date_time.replace(tzinfo=tzutc) for i in Climate.query.all()],'y':[i.humidity for i in Climate.query.all()],'name':'Влажность'}
           ]       
          }
        #columns = [{'id': 'Column 1', 'name': 'Column 1'}]
