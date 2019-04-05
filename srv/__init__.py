@@ -18,7 +18,7 @@ login = LoginManager()
 login.login_view = 'auth.login'
 #login.refresh_view = 'auth.login'
 bootstrap = Bootstrap()
-moment = Moment()
+#moment = Moment()
 
 class RequestFormatter(logging.Formatter):
     def format(self, record):
@@ -52,7 +52,7 @@ def create_app(config_class=Config):
     migrate.init_app(app, db)
     login.init_app(app)
     bootstrap.init_app(app)
-    moment.init_app(app)
+    #moment.init_app(app)
 
     register_dashapps(app)
 
@@ -114,7 +114,7 @@ def create_app(config_class=Config):
     app.logger.setLevel(logging.INFO)
     app.logger.info('Srv startup')
     
-    from srv.models import User, KnihaFaktur, test
+    from srv.models import User, KnihaFaktur
     @app.shell_context_processor
     def make_shell_context():
        return dict(app=app, db=db, User=User, KnihaFaktur=KnihaFaktur, test=test)

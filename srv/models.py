@@ -6,13 +6,17 @@ from flask_login import UserMixin
 from srv import login
 from flask import flash,url_for
 from werkzeug.security import generate_password_hash, check_password_hash
+from dateutil.tz import tzutc
 
 class ToDictInterfaceMixin(object):
     def to_dict(self):
         d={}
         for col in self.__table__.columns:
           if 'visible' not in col.info or col.info['visible'] is not False:
-              d[col.key]=getattr(self, col.key)
+              if isinstance(getattr(self, col.key),datetime):
+                  d[col.key] = getattr(self, col.key).replace(tzinfo=tzutc())
+              else:
+                  d[col.key]=getattr(self, col.key)
         return d
 
 
@@ -39,8 +43,8 @@ class PaginatedAPIMixin(object):
 
 
 
-class test(db.Model):
-    pass
+# class test(db.Model):
+#     pass
     #INDEXZAZNAMU = db.Column(db.Integer,primary_key=True)
     #cislofa = db.Column(db.Integer,primary_key=True)
 
@@ -52,7 +56,7 @@ class KnihaFaktur(db.Model):
 
 
 class Log(ToDictInterfaceMixin, db.Model):
-    date_time = db.Column(db.DateTime,primary_key=True,default=datetime.utcnow)       
+    date_time = db.Column(db.DateTime(timezone=True),primary_key=True,default=datetime.utcnow)
     log_type = db.Column(db.String(50),index=True)
     message = db.Column(db.String(512))
 
