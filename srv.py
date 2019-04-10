@@ -1,5 +1,5 @@
 from srv import create_app, db
-from srv.models import User
+#from srv.models import User
 
 app = create_app()
 

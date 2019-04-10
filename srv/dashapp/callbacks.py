@@ -20,20 +20,20 @@ def register_callbacks(app):
        if value =='temp':
          figure = {
           'data':[
-             {'x':[i.date_time for i in Climate.query.all()],'y':[i.temp for i in Climate.query.all()],'name':'Температура'}
+             {'x':[i.date_time.replace(tzinfo=tzutc()) for i in Climate.query.all()],'y':[i.temp for i in Climate.query.all()],'name':'Температура'}
           ]       
          } 
        if value=='hum':
          figure = {
           'data':[
-             {'x':[i.date_time for i in Climate.query.all()],'y':[i.humidity for i in Climate.query.all()],'name':'Влажность'}
+             {'x':[i.date_time.replace(tzinfo=tzutc()) for i in Climate.query.all()],'y':[i.humidity for i in Climate.query.all()],'name':'Влажность'}
           ]       
          } 
        if value=='all':
          figure = {
           'data':[
-             {'x':[i.date_time.replace(tzinfo=tzutc) for i in Climate.query.all()],'y':[i.temp for i in Climate.query.all()],'name':'Температура'},
-             {'x':[i.date_time.replace(tzinfo=tzutc) for i in Climate.query.all()],'y':[i.humidity for i in Climate.query.all()],'name':'Влажность'}
+             {'x':[i.date_time.replace(tzinfo=tzutc()) for i in Climate.query.all()],'y':[i.temp for i in Climate.query.all()],'name':'Температура'},
+             {'x':[i.date_time.replace(tzinfo=tzutc()) for i in Climate.query.all()],'y':[i.humidity for i in Climate.query.all()],'name':'Влажность'}
           ]       
          }
        #columns = [{'id': 'Column 1', 'name': 'Column 1'}]

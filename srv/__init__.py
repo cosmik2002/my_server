@@ -49,6 +49,8 @@ def create_app(config_class=Config):
 
 
     db.init_app(app)
+    db.reflect(app=app,bind='fakturace')
+
     migrate.init_app(app, db)
     login.init_app(app)
     bootstrap.init_app(app)
@@ -56,7 +58,6 @@ def create_app(config_class=Config):
 
     register_dashapps(app)
 
-    db.reflect(app=app)
 
     from srv.errors import bp as errors_bp
     app.register_blueprint(errors_bp)
@@ -72,6 +73,9 @@ def create_app(config_class=Config):
     
     from srv.api import bp as api_bp
     app.register_blueprint(api_bp, url_prefix='/api')
+
+    from srv.fakturace import bp as fakturace_bp
+    app.register_blueprint(fakturace_bp, url_prefix='/fakturace')
 
     if not app.debug and not app.testing:
       if app.config['MAIL_SERVER']:
@@ -114,10 +118,10 @@ def create_app(config_class=Config):
     app.logger.setLevel(logging.INFO)
     app.logger.info('Srv startup')
     
-    from srv.models import User, KnihaFaktur
+    from srv.models import User
     @app.shell_context_processor
     def make_shell_context():
-       return dict(app=app, db=db, User=User, KnihaFaktur=KnihaFaktur)
+       return dict(app=app, db=db, User=User)
     
     return  app 
 

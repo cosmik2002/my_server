@@ -6,6 +6,7 @@ from flask_login import UserMixin
 from srv import login
 from flask import flash,url_for
 from werkzeug.security import generate_password_hash, check_password_hash
+from dateutil.tz import tzutc
 
 class ToDictInterfaceMixin(object):
     """serialize table record to dict"""
@@ -14,7 +15,10 @@ class ToDictInterfaceMixin(object):
         d={}
         for col in self.__table__.columns:
           if 'visible' not in col.info or col.info['visible'] is not False:
-              d[col.key]=getattr(self, col.key)
+              if isinstance(getattr(self, col.key),datetime):
+                  d[col.key] = getattr(self, col.key).replace(tzinfo=tzutc())
+              else:
+                  d[col.key]=getattr(self, col.key)
         return d
 
 
@@ -41,15 +45,19 @@ class PaginatedAPIMixin(object):
 
 
 
-#class test(db.Model):
-#    pass
+# class test(db.Model):
+#     pass
     #INDEXZAZNAMU = db.Column(db.Integer,primary_key=True)
     #cislofa = db.Column(db.Integer,primary_key=True)
 
-class KnihaFaktur(db.Model):
+class knihafaktur(db.Model):
     __bind_key__ = 'fakturace'
-    __tablename__ = 'KNIHAFAKTUR'
-    INDEXZAZNAMU = db.Column(db.Integer,primary_key=True)
+#    __tablename__ = 'knihafaktur'
+#    __table_args__ = {
+#        'autoload':True,
+#        'autoload_with':db.get_engine(bind='fakturace')
+#    }
+    #INDEXZAZNAMU = db.Column(db.Integer,primary_key=True)
     #cislofa = db.Column(db.Integer,primary_key=True)
 
 
@@ -102,8 +110,8 @@ class User(PaginatedAPIMixin, UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
         #return self.password_hash == password;
-    def __repr__(self):
-        return '<User {}>'.format(self.username) 
+    #def __repr__(self):
+    #    return '<User {}>'.format(self.username) 
 
     def to_dict(self, include_email=False):
         data = {
