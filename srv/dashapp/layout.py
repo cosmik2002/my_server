@@ -1,10 +1,15 @@
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_table as dt
-from srv.models import Climate
-import plotly.graph_objs as go
+from datetime import timedelta, datetime
 
 layout = html.Div([
+    html.Nav(html.A('Home', href='/')),
+    dcc.DatePickerRange(
+        id='date-picker-range',
+        start_date=datetime.now()-timedelta(30),
+        end_date=datetime.now()
+    ),
     html.H1('Температура на дачке'),
     dcc.Dropdown(
         id='my-dropdown',

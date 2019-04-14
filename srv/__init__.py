@@ -20,14 +20,16 @@ login.login_view = 'auth.login'
 bootstrap = Bootstrap()
 moment = Moment()
 
+
 class RequestFormatter(logging.Formatter):
     def format(self, record):
         record.url = request.url
         record.remote_addr = request.remote_addr
         return super(RequestFormatter, self).format(record)
 
+
 def register_dashapps(app):
-   #with app.app_context():
+    #with app.app_context():
      from srv.dashapp.layout import layout
      from srv.dashapp.callbacks import register_callbacks
      dash_app = dash.Dash(__name__,server=app,url_base_pathname='/dashboard/')

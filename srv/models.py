@@ -52,14 +52,23 @@ class PaginatedAPIMixin(object):
 
 class knihafaktur(db.Model):
     __bind_key__ = 'fakturace'
+    numodberatel = db.Column(db.Integer, db.ForeignKey("adresy.indexzaznamu"))
 #    __tablename__ = 'knihafaktur'
-#    __table_args__ = {
+    __table_args__ = {
+        'extend_existing': True
 #        'autoload':True,
 #        'autoload_with':db.get_engine(bind='fakturace')
-#    }
+    }
     #INDEXZAZNAMU = db.Column(db.Integer,primary_key=True)
     #cislofa = db.Column(db.Integer,primary_key=True)
 
+
+class adresy(db.Model):
+    __bind_key__ = 'fakturace'
+
+
+#operations.client1obj = db.relationship("clients",primaryjoin=(operations.client1==clients.id))
+knihafaktur.adresy = db.relationship("adresy", primaryjoin=(knihafaktur.numodberatel == adresy.indexzaznamu))
 
 class Log(ToDictInterfaceMixin, db.Model):
     date_time = db.Column(db.DateTime,primary_key=True,default=datetime.utcnow)
