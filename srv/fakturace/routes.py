@@ -1,9 +1,11 @@
 from flask import render_template,current_app,request
 from srv.fakturace import bp
-from srv.models import knihafaktur
+from srv.models import knihafaktur, adresy
+from srv import db
 from flask_login import login_required,current_user
 from flask_table import create_table, Table, Col
 from sqlalchemy import desc
+import pandas
 
 
 @bp.route('/')
@@ -23,7 +25,17 @@ def index():
     # items = [dict(name='Name1', description='Description1'),
     #           dict(name='Name2', description='Description2'),
     #           dict(name='Name3', description='Description3')]
+    # df = pandas.read_sql(knihafaktur.query.join(adresy).order_by(desc(knihafaktur.cislofa))
+    #                      .add_columns(adresy.nazevfirmy).limit(50).statement,db.get_engine(bind='fakturace'))
+    df = pandas.read_sql(knihafaktur.query.join(adresy).order_by(desc(knihafaktur.cislofa))
+                         .from_self(knihafaktur.cislofa,adresy.nazevfirmy).limit(10).statement,db.get_engine(bind='fakturace'))
+    #df = pandas.DataFrame(knihafaktur.query.join(adresy).order_by(desc(knihafaktur.cislofa)).limit(50))
+    table_cls_pd = create_table(options={'border': 'solid'})
+    for col in df.columns:
+        table_cls_pd.add_column(col, Col(col))
+
     items = knihafaktur.query.order_by(desc(knihafaktur.cislofa)).limit(50)
     table = table_cls(items)
     table1 = ItemTable(items)
-    return render_template('table.html', table=table, table1=table1)
+    table2 = table_cls_pd(df.to_dict('rows'))
+    return render_template('table.html', table=table2, table1=table)
