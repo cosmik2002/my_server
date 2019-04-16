@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+{{table}}
+{% if 1 %}<a href="{{ url_for('fakturace.index', page = 2) }}"> Next >></a>{% else %}Older posts >>{% endif %}
+{%endblock%}
