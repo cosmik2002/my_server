@@ -34,10 +34,12 @@ def index(page=1):
     stmt = knihafaktur.query.order_by(desc(knihafaktur.cislofa)).from_self(knihafaktur.cislofa,adresy.nazevfirmy).\
         join(adresy).statement
     stmt = knihafaktur.query.order_by(desc(knihafaktur.cislofa)).options(load_only("cislofa")).join("adresy").statement
-    stmt = knihafaktur.query.order_by(desc(knihafaktur.cislofa)).join("adresy").with_entities(knihafaktur.cislofa,adresy.nazevfirmy).statement
+    items = knihafaktur.query.order_by(desc(knihafaktur.cislofa)).join("adresy").\
+        with_entities(knihafaktur.cislofa,adresy.nazevfirmy).paginate(page,per_page,False)
     df = pandas.read_sql(knihafaktur.query.order_by(desc(knihafaktur.cislofa)).from_self(knihafaktur.cislofa,adresy.nazevfirmy).
                          join(adresy).limit(per_page).offset(page*per_page).statement,db.get_engine(bind='fakturace'))
     df = pandas.read_sql(stmt, db.get_engine(bind='fakturace'))
+    df = pandas.DataFrame.from_dict(items.items)
     table_cls_pd = create_table(options={'border': 'solid'})
     for col in df.columns:
         table_cls_pd.add_column(col, Col(col))
