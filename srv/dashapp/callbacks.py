@@ -22,7 +22,7 @@ def register_callbacks(app):
        if value == 'temp':
          figure = {
           'data': [
-             {'x': [i.date_time.replace(tzinfo=tzutc()).astimezone(tzlocal()) for i in Climate.query.filter(Climate.date_time >= start_date)],
+             {'x': [i.date_time.replace(tzinfo=tzutc()) for i in Climate.query.filter(Climate.date_time >= start_date)],
               'y':[i.temp for i in Climate.query.filter(Climate.date_time >= start_date)], 'name':'Температура'}
           ]       
          } 
