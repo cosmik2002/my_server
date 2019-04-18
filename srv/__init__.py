@@ -120,10 +120,10 @@ def create_app(config_class=Config):
     app.logger.setLevel(logging.INFO)
     app.logger.info('Srv startup')
     
-    from srv.models import User
+    from srv.models import User,knihafaktur
     @app.shell_context_processor
     def make_shell_context():
-       return dict(app=app, db=db, User=User)
+       return dict(app=app, db=db, User=User, knihafaktur=knihafaktur)
     
     return  app 
 

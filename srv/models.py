@@ -6,7 +6,7 @@ from flask_login import UserMixin
 from srv import login
 from flask import flash,url_for
 from werkzeug.security import generate_password_hash, check_password_hash
-from dateutil.tz import tzutc
+from dateutil.tz import tzutc, tzlocal
 
 class ToDictInterfaceMixin(object):
     """serialize table record to dict"""
@@ -63,9 +63,16 @@ class knihafaktur(db.Model):
     #cislofa = db.Column(db.Integer,primary_key=True)
 
 
+class knihafakturpolozky(db.Model):
+    __bind_key__ = 'fakturace'
+
+
 class adresy(db.Model):
     __bind_key__ = 'fakturace'
 
+
+class odberatele_311(db.Model):
+    __bind_key__ = 'fakturace'
 
 #operations.client1obj = db.relationship("clients",primaryjoin=(operations.client1==clients.id))
 knihafaktur.adresy = db.relationship("adresy", primaryjoin=(knihafaktur.numodberatel == adresy.indexzaznamu))
