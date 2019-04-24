@@ -41,7 +41,7 @@ def register_dashapps(app):
     washes_dash_app = dash.Dash(__name__, server=app, url_base_pathname='/washes/')
     washes_dash_app.layout = washes_layout
     washes_dash_app.title = 'Мойки'
-    washes_register_callbacks(washes_dash_app)
+    washes_register_callbacks(washes_dash_app,app.config)
     protect_dashviews(washes_dash_app)
 
 

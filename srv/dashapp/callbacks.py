@@ -6,15 +6,15 @@ from sqlalchemy import or_, text,desc
 from dateutil.tz import tzutc, tzlocal
 import pandas as pd
 
-def washes_register_callbacks(app):
+def washes_register_callbacks(app,config):
     @app.callback(
          Output('wash-graph', 'figure'),
          [Input('wash-dropdown', 'value'),
           Input('wash-time-dropdown', 'value')]
     )
     def upgrade_graph(value,time):
-        beroun_csv = app.config['beroun_csv']
-        trutnov_csv = app.config['trutnov_csv']
+        beroun_csv = config['BEROUN_CSV']
+        trutnov_csv = config['TRUTNOV_CSV']
         if value != 'All':
             df = pd.read_csv(beroun_csv if value=='Beroun' else trutnov_csv, parse_dates=True, sep=';',index_col=0)
             df = df.ffill()
