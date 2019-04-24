@@ -16,7 +16,7 @@ class ToDictInterfaceMixin(object):
         for col in self.__table__.columns:
           if 'visible' not in col.info or col.info['visible'] is not False:
               if isinstance(getattr(self, col.key),datetime):
-                  d[col.key] = getattr(self, col.key).replace(tzinfo=tzutc())
+                  d[col.key] = getattr(self, col.key).replace(tzinfo=tzutc()).astimezone(tzlocal()).strftime('%d.%m.%Y %H:%M')
               else:
                   d[col.key]=getattr(self, col.key)
         return d

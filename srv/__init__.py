@@ -30,13 +30,20 @@ class RequestFormatter(logging.Formatter):
 
 def register_dashapps(app):
     #with app.app_context():
-     from srv.dashapp.layout import layout
-     from srv.dashapp.callbacks import register_callbacks
-     dash_app = dash.Dash(__name__,server=app,url_base_pathname='/dashboard/')
-     dash_app.layout = layout
-     dash_app.title = 'Analytics'
-     register_callbacks(dash_app)
-     protect_dashviews(dash_app)
+    from srv.dashapp.layout import layout, washes_layout
+    from srv.dashapp.callbacks import register_callbacks, washes_register_callbacks
+    dash_app = dash.Dash(__name__,server=app,url_base_pathname='/dashboard/')
+    dash_app.layout = layout
+    dash_app.title = 'Analytics'
+    register_callbacks(dash_app)
+    protect_dashviews(dash_app)
+
+    washes_dash_app = dash.Dash(__name__, server=app, url_base_pathname='/washes/')
+    washes_dash_app.layout = washes_layout
+    washes_dash_app.title = 'Мойки'
+    washes_register_callbacks(washes_dash_app)
+    protect_dashviews(washes_dash_app)
+
 
 # Method to protect dash views/routes
 def protect_dashviews(dashapp):
@@ -60,6 +67,9 @@ def create_app(config_class=Config):
 
     register_dashapps(app)
 
+
+    # from srv.vnc import bp as vnc_bp
+    # app.register_blueprint(vnc_bp)
 
     from srv.errors import bp as errors_bp
     app.register_blueprint(errors_bp)
