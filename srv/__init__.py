@@ -71,6 +71,9 @@ def create_app(config_class=Config):
     # from srv.vnc import bp as vnc_bp
     # app.register_blueprint(vnc_bp)
 
+    from srv.files import bp as files_bp
+    app.register_blueprint(files_bp, url_prefix='/files')
+
     from srv.errors import bp as errors_bp
     app.register_blueprint(errors_bp)
 

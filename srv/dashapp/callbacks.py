@@ -21,7 +21,7 @@ def washes_register_callbacks(app,config):
             if value == 'Beroun':
                 df['val'] = (df['res'] - df['res'].shift(1))*10
             else:
-                df['val'] = (df['res3'] - df['res3'].shift(1))*10
+                df['val'] = (df['res3'] - df['res3'].shift(1))
             if time == 'hours':
                 data = df.resample('H')['val'].sum()
             if time == 'days':
@@ -36,8 +36,10 @@ def washes_register_callbacks(app,config):
         else:
             df1 = pd.read_csv(beroun_csv, parse_dates=True, sep=';', index_col=0)
             df2 = pd.read_csv(trutnov_csv, parse_dates=True, sep=';', index_col=0)
+            df1 = df1.ffill()
+            df2 = df2.ffill()
             df1['val'] = (df1['res'] - df1['res'].shift(1)) * 10
-            df2['val'] = (df2['res3'] - df2['res3'].shift(1)) * 10
+            df2['val'] = (df2['res3'] - df2['res3'].shift(1))
             if time == 'hours':
                 data1 = df1.resample('H')['val'].sum()
                 data2 = df2.resample('H')['val'].sum()
