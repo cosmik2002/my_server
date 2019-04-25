@@ -6,5 +6,12 @@
         <a href ={{url_for('files.index', file = file)}}>{{file}}</a>
         {% endfor %}
         </div>
-<textarea cols="80" rows="20">{{text}}</textarea>
+<div>
+        <form >
+                <input name="search_text" type="search" value={{src}}>
+                <input type="submit" style="position: absolute; left: -9999px"/>
+        </form>
+
+</div>
+<textarea cols="80" rows="20" wrap="off">{{text}}</textarea>
 {%endblock%}
