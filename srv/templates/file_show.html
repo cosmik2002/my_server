@@ -3,7 +3,7 @@
 {% block app_content %}
         <div>
         {% for file in files %}
-        <a href ={{url_for('files.index', file = file)}}>{{file}}</a>
+        <a href ={{url_for('files.index', file = file, search_text=src)}}>{{file}}</a>
         {% endfor %}
         </div>
 <div>

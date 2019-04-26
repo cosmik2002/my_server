@@ -12,6 +12,7 @@
       {% endif %}
 {% endblock %}
 {% block navbar %}
+{% if current_user.is_authenticated %}
 <nav class="navbar navbar-default">
     <a href="{{ url_for('main.index') }}">Home</a>
     {%if current_user.is_anonymous %}
@@ -22,7 +23,9 @@
     <a href="{{url_for('fakturace.index')}}">Fakturace</a>
     <a href="{{url_for('/washes/')}}">Мойки</a>
     <a href="{{url_for('/dashboard/')}}">Dashboard</a>
+    <a href="{{url_for('files.index')}}">Служебные файлы</a>
     </nav>
+{% endif %}
 {% endblock %}
 {% block content %}
     <div class="container">

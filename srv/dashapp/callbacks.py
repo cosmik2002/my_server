@@ -34,8 +34,8 @@ def washes_register_callbacks(app,config):
                 ]
             }
         else:
-            df1 = pd.read_csv(beroun_csv, parse_dates=True, sep=';', index_col=0)
-            df2 = pd.read_csv(trutnov_csv, parse_dates=True, sep=';', index_col=0)
+            df1 = pd.read_csv(beroun_csv, parse_dates=True,  index_col=0)
+            df2 = pd.read_csv(trutnov_csv, parse_dates=True, index_col=0)
             df1 = df1.ffill()
             df2 = df2.ffill()
             df1['val'] = (df1['res'] - df1['res'].shift(1)) * 10
