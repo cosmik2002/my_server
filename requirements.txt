@@ -7,7 +7,7 @@ cffi==1.12.2
 chardet==3.0.4
 Click==7.0
 colorama==0.4.1
-cryptography==2.6.1
+cryptography==3.2
 dash==0.40.0
 dash-core-components==0.45.0
 dash-html-components==0.15.0
